@@ -1,0 +1,36 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+build/
+coverage/
+
+# Variables de entorno (versionar solo .env.example)
+.env
+.env.*
+!.env.example
+
+# Base de datos SQLite local y respaldos
+backend/database/*.sqlite
+backend/database/*.sqlite-wal
+backend/database/*.sqlite-shm
+backend/database/*.sqlite-journal
+backend/database/backups/*
+!backend/database/backups/.gitkeep
+
+# Archivos subidos por usuarios (públicos y privados)
+backend/uploads/**
+!backend/uploads/**/
+!backend/uploads/**/.gitkeep
+backend/storage/**
+!backend/storage/**/
+!backend/storage/**/.gitkeep
+
+# Logs y sistema
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
