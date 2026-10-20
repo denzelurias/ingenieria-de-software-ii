@@ -625,12 +625,12 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 );
 
 -- Índices
-CREATE INDEX IF NOT EXISTS idx_users_estado ON users(estado_cuenta, rol);
+CREATE INDEX IF NOT EXISTS idx_users_estado ON users(rol, estado_cuenta, created_at);
 CREATE INDEX IF NOT EXISTS idx_businesses_category ON businesses(category_id);
 CREATE INDEX IF NOT EXISTS idx_businesses_zone ON businesses(campus_zone_id, mostrar_ubicacion);
 CREATE INDEX IF NOT EXISTS idx_businesses_visible ON businesses(inactivo_oculto, esta_abierto);
-CREATE INDEX IF NOT EXISTS idx_businesses_activity ON businesses(last_activity_at);
-CREATE INDEX IF NOT EXISTS idx_products_business_estado ON products(business_id, estado);
+CREATE INDEX IF NOT EXISTS idx_businesses_activity ON businesses(inactivo_oculto, last_activity_at);
+CREATE INDEX IF NOT EXISTS idx_products_business_estado ON products(business_id, estado, precio);
 CREATE INDEX IF NOT EXISTS idx_products_estado_precio ON products(estado, precio);
 CREATE INDEX IF NOT EXISTS idx_schedules_lookup ON business_schedules(dia_semana, cerrado_todo_el_dia, hora_apertura, hora_cierre);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_contacts_principal ON business_contacts(business_id) WHERE es_principal = 1;

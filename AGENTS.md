@@ -7,8 +7,9 @@ Este archivo define las reglas obligatorias para cualquier agente o desarrollado
 ## 1. Jerarquía de Fuentes de Verdad
 
 1. **[`especificacion_tecnica_emprendebuho.md`](especificacion_tecnica_emprendebuho.md) (v2.0):** contrato maestro de producto, base de datos, API REST, rutas de interfaz y criterios de aceptación.
-2. **[`docs/plan-de-construccion.md`](docs/plan-de-construccion.md):** división por fases, propiedad de archivos por agente, matriz de trazabilidad de las 40 Historias de Usuario y plantillas de prompts.
-3. **[`docs/decisiones-tecnicas.md`](docs/decisiones-tecnicas.md):** registro de decisiones arquitectónicas (ADR) y justificación de los cambios respecto a la v1.
+2. **[`docs/especificacion-arquitectura.md`](docs/especificacion-arquitectura.md) y [`docs/especificacion-base-de-datos.md`](docs/especificacion-base-de-datos.md):** especificaciones formales de arquitectura (C4, 4+1 vistas, diagramas de secuencia) y de base de datos relacional (diccionario de datos de las 11 tablas, restricciones, índices con `EXPLAIN QUERY PLAN` y transacciones), junto con el DDL oficial en [`backend/database/schema.sql`](backend/database/schema.sql).
+3. **[`docs/plan-de-construccion.md`](docs/plan-de-construccion.md):** división por fases, propiedad de archivos por agente, matriz de trazabilidad de las 40 Historias de Usuario y plantillas de prompts.
+4. **[`docs/decisiones-tecnicas.md`](docs/decisiones-tecnicas.md):** registro de decisiones arquitectónicas (ADR) y justificación de los cambios respecto a la v1.
 
 > **Regla de oro:** Si encuentras una contradicción entre el código y `especificacion_tecnica_emprendebuho.md`, **manda la especificación**. Si necesitas cambiar un endpoint, campo o regla técnica, actualiza primero la especificación y registra la decisión en `docs/decisiones-tecnicas.md` en el mismo commit.
 
