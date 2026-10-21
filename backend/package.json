@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "test": "node --test tests/",
+    "test": "node --test \"tests/**/*.js\"",
     "db:reset": "node database/seed.js --reset"
   },
   "dependencies": {
