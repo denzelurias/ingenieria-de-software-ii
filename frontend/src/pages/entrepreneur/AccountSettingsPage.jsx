@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { startTransition, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { api } from '../../services/api.js';
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -14,7 +14,10 @@ export default function AccountSettingsPage() {
     setBusy(true);
     try {
       await api.delete('/auth/my-account', { password_actual: password });
-      setPassword(''); auth.logout(); navigate('/', { replace: true });
+      setPassword('');
+      // La navegación del router y el cierre de sesión deben tener la misma
+      // prioridad para que la guardia no redirija antes al login.
+      startTransition(() => { navigate('/', { replace: true }); auth.logout(); });
       toast.success('Tu cuenta fue eliminada y tu negocio dejó de ser público.');
     } finally { setBusy(false); }
   };

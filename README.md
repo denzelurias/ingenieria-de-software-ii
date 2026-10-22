@@ -12,7 +12,9 @@ Monorepo JavaScript con npm workspaces (`backend` y `frontend`):
 - **Frontend:** React 19, React Router 7, Vite, Tailwind CSS 4 mediante `@tailwindcss/vite` e iconos de Lucide.
 - **Pruebas:** ejecutor integrado `node --test` y Supertest.
 
-El repositorio contiene el backend de las fases F1, F2A y F2B y la base del frontend F2C: contextos, cliente API, navegación, layouts y componentes comunes. Las páginas completas de F3A, F3B y F3C siguen pendientes; algunas rutas muestran contenido provisional. La existencia de un endpoint no implica que su formulario o pantalla ya esté implementado.
+El prototipo integra el directorio público, autenticación, panel del emprendedor y panel administrativo. Las rutas públicas incluyen búsqueda, filtros, favoritos y perfiles; los paneles permiten gestionar negocios, solicitudes, moderación y mantenimiento. Consulta [la verificación F4](docs/verificacion-f4.md) para distinguir las pruebas ejecutadas de las comprobaciones pendientes.
+
+La SPA consume `/api` mediante el cliente `fetch`. El backend separa rutas, controladores, servicios y repositorios con SQL preparado. Las operaciones relacionadas se realizan en transacciones SQLite; cada mutación administrativa registra auditoría. Los JWT se verifican contra `token_version`, lo que permite revocarlos inmediatamente. Las credenciales estudiantiles permanecen fuera de los archivos públicos y la ubicación solo se publica cuando su propietario lo permite.
 
 ## Requisitos previos
 
@@ -40,6 +42,8 @@ npm install
 ```
 
 Una sola instalación en la raíz instala las dependencias de ambos workspaces. No es necesario instalar Vite o nodemon globalmente.
+
+La raíz incluye una excepción `allowScripts` limitada a `better-sqlite3@13.0.3`: evita que npm 11.19 intente recompilar innecesariamente el paquete, que ya distribuye binarios nativos. No desactiva los scripts de los demás paquetes. La instalación se comprobó en Windows x64 con Node.js 24.21.0 y npm 11.19.0. Consulta la decisión F4-01 en [decisiones técnicas](docs/decisiones-tecnicas.md) antes de actualizar esa dependencia o utilizar una plataforma sin binario compatible.
 
 ### Variables de entorno
 
@@ -94,7 +98,7 @@ El arranque normal también inicializa el esquema y, fuera de pruebas, carga las
 
 ### Cuentas locales de demostración
 
-Estas cuentas provienen de las semillas; no deben usarse como credenciales de producción. Se pueden utilizar con la API mientras se completan las pantallas de autenticación.
+Estas cuentas y contraseñas son datos públicos de demostración generados por las semillas, no credenciales reales. Se utilizan desde `/login` y no deben reutilizarse en producción ni en cuentas personales.
 
 | Correo | Contraseña | Rol / estado |
 | --- | --- | --- |
@@ -155,17 +159,37 @@ Los siguientes comandos se ejecutan desde la raíz y corresponden a scripts exis
 | Comando | Resultado |
 | --- | --- |
 | `npm run dev` | Inicia ambos servicios en desarrollo. |
-| `npm test` | Ejecuta las pruebas del backend mediante `node --test "tests/**/*.js"`. |
+| `npm test` | Ejecuta todas las pruebas del backend y las pruebas de integración del cliente y configuración de lint del frontend. |
+| `npm run test:e2e` | Ejecuta los recorridos de los tres roles en Chromium sin ventana, con SQLite y archivos temporales. |
 | `npm run build` | Compila el frontend con Vite en `frontend/dist/`. |
-| `npm run lint` | Ejecuta ESLint sobre `frontend/src`; actualmente falta su configuración, como se indica abajo. |
+| `npm run lint` | Ejecuta ESLint sobre `frontend/src`, incluidos archivos JSX. |
 | `npm run db:reset` | Recrea SQLite y carga las semillas; elimina datos y archivos locales. |
 | `npm run preview -w frontend` | Inicia la vista previa del bundle ya compilado; consulta la URL que imprime Vite. |
 
-También puedes ejecutar `npm test` desde `backend/`, o `npm run build` desde `frontend/`. Las pruebas de integración usan el helper de bases temporales en `backend/tests/helpers/testApp.js`.
+También puedes ejecutar `npm test` desde `backend/` o `frontend/`, y `npm run build` desde `frontend/`. Las pruebas usan el helper de bases temporales en `backend/tests/helpers/testApp.js`; no necesitan restablecer tu base de datos local.
+
+La suite E2E detecta Edge o Chrome en las rutas habituales de Windows y Chromium/Chrome en Linux o macOS. Requiere que el navegador ya esté instalado y usa el protocolo CDP mediante el `WebSocket` de Node.js. Para indicar otra ubicación:
+
+```sh
+npm run test:e2e -w frontend -- --browser "C:/ruta/al/navegador.exe"
+```
+
+La suite inicia sus propios servicios en puertos disponibles, carga semillas en SQLite temporal y cierra los servicios al terminar. Las capturas y la descarga de prueba quedan en la carpeta temporal que imprime. Las operaciones administrativas de estas pruebas afectan únicamente esos datos de demostración.
 
 La compilación genera los archivos del frontend; no inicia el backend. El servidor Express actual no publica automáticamente `frontend/dist/`. La vista previa de Vite tampoco sustituye una configuración de despliegue de ambos servicios.
 
-**Limitación verificada:** `npm run lint` falla porque no existe un archivo `eslint.config.*`. El script está declarado, pero falta completar su configuración en una tarea posterior. Este README no modifica esa configuración ni presenta el lint como aprobado.
+`frontend/eslint.config.js` configura las comprobaciones de errores, variables no definidas y variables sin uso. Una regla local reconoce los componentes utilizados en JSX; no requiere paquetes adicionales de lint.
+
+## Rutas principales
+
+| Acceso | Rutas |
+| --- | --- |
+| Público | `/`, `/explorar`, `/negocio/:slug`, `/favoritos` |
+| Autenticación y estado | `/login`, `/registro`, `/estado-solicitud`, `/estado-cuenta`, `/recuperar-password`, `/restablecer-password` |
+| Emprendedor aprobado | `/panel`, `/panel/perfil`, `/panel/catalogo`, `/panel/horarios`, `/panel/vista-previa`, `/panel/notificaciones`, `/panel/cuenta` |
+| Administrador | `/admin`, `/admin/solicitudes`, `/admin/reportes`, `/admin/categorias`, `/admin/moderacion`, `/admin/mantenimiento` |
+
+Los favoritos son públicos y se guardan en el navegador. Los paneles verifican sesión y rol; el backend vuelve a comprobar los permisos en cada petición. Las acciones de mantenimiento requieren confirmación.
 
 ## Estructura del repositorio
 
@@ -200,6 +224,7 @@ ingenieria-de-software-ii/
 │   └── tests/                   # Integración y helpers
 └── frontend/
     ├── package.json
+    ├── eslint.config.js
     ├── index.html
     ├── vite.config.js
     └── src/
@@ -210,11 +235,14 @@ ingenieria-de-software-ii/
         ├── hooks/
         ├── utils/
         ├── services/api.js
+        ├── pages/               # public/, auth/, entrepreneur/, admin/
         └── components/
             ├── common/
             ├── layout/
             └── routing/
 ```
+
+Las pruebas del cliente y los recorridos de navegador están en `frontend/tests/`.
 
 Las dependencias, los bundles, los archivos `.env`, las bases locales, los respaldos y los archivos subidos están ignorados por Git. Las plantillas `.env.example` y los archivos `.gitkeep` se conservan.
 
@@ -232,8 +260,10 @@ Las dependencias, los bundles, los archivos `.env`, las bases locales, los respa
 | Base bloqueada, sin permisos o reset fallido | Detén el backend y cualquier herramienta que mantenga abierta SQLite. Comprueba permisos y rutas antes de repetir un reset, que elimina datos. |
 | Un contacto de un carácter falla en una base antigua | Consulta la migración de la sección 7 de `docs/especificacion-base-de-datos.md`. Inicializar el servidor no modifica un `CHECK` de una tabla existente. No restablezcas una base con datos que necesites conservar. |
 | Una cuenta de semillas no puede operar | Comprueba su rol y estado. Las cuentas pendientes o rechazadas no tienen los permisos de una cuenta aprobada. |
-| Una página muestra contenido provisional | La base F2C está implementada; las páginas funcionales de F3A/F3B/F3C están pendientes. |
-| ESLint no encuentra `eslint.config.*` | Es una limitación actual del repositorio. El script existe, pero la configuración todavía debe incorporarse. |
+| Las pruebas E2E no encuentran navegador | Instala un navegador Chromium compatible o proporciona la ruta del que ya tengas mediante `--browser`. |
+| ESLint no encuentra su configuración | Ejecuta `npm run lint` desde la raíz o desde `frontend/`; la configuración está en `frontend/eslint.config.js`. |
+
+La auditoría de instalación detectó tres alertas altas en la cadena de desarrollo `nodemon → chokidar → braces`. No se aplicó `npm audit fix --force`, que propone una versión antigua incompatible con la instalación actual. El detalle y las limitaciones verificadas se registran en [la verificación F4](docs/verificacion-f4.md).
 
 ## Documentación de referencia
 

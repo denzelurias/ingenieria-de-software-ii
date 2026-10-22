@@ -38,7 +38,10 @@ function RouteFocus() {
   const location = useLocation();
   useEffect(() => {
     document.title = 'EmprendeBúho · Tu campus, tus emprendimientos';
-    const frame = requestAnimationFrame(() => { document.querySelector('main')?.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); });
+    const frame = requestAnimationFrame(() => {
+      if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) document.querySelector('main')?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0 });
+    });
     return () => cancelAnimationFrame(frame);
   }, [location.pathname]);
   return null;
