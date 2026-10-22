@@ -1,7 +1,10 @@
 import { ok } from '../utils/response.js';
 import { AppError } from '../utils/AppError.js';
 const listing = (res, result) => ok(res, result.items, undefined, result.meta);
-const fileError = next => error => { if (error) next(error.code === 'ENOENT' ? new AppError(404, 'NOT_FOUND') : error); };
+const fileError = next => error => {
+  // Cerrar el visor o cancelar un fetch no es un fallo interno del servidor.
+  if (error && error.code !== 'ECONNABORTED') next(error.code === 'ENOENT' ? new AppError(404, 'NOT_FOUND') : error);
+};
 export function createAdminController(service, maintenance) {
   return {
     stats: (req, res) => ok(res, service.stats()),

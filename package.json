@@ -5,9 +5,13 @@
     "backend",
     "frontend"
   ],
+  "allowScripts": {
+    "better-sqlite3@13.0.3": false
+  },
   "scripts": {
     "dev": "concurrently -n API,WEB -c blue,yellow \"npm run dev -w backend\" \"npm run dev -w frontend\"",
-    "test": "npm test -w backend",
+    "test": "npm test -w backend && npm test -w frontend",
+    "test:e2e": "npm run test:e2e -w frontend",
     "build": "npm run build -w frontend",
     "lint": "npm run lint -w frontend",
     "db:reset": "npm run db:reset -w backend"

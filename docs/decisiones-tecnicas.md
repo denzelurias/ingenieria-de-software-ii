@@ -77,6 +77,12 @@ En la v1, la tabla de Historias de Usuario (§3.3) y las tablas de la API (§5) 
 
 ## 5. Decisiones durante la construcción
 
+### F4-01 — Instalación reproducible y verificaciones (2026-10-22)
+
+La instalación limpia con npm 11.19.0 intentó sintetizar `node-gyp rebuild` para `better-sqlite3` 13.0.3 al leer el lockfile, aunque el paquete declara `gypfile: false` y distribuye binarios precompilados. Se agrega en la raíz `allowScripts: { "better-sqlite3@13.0.3": false }`, limitado a esa versión. No se desactivan globalmente los scripts ni se modifica el paquete instalado. En una copia limpia se verifican `npm install` y la apertura de SQLite con el binario distribuido. Revisar esta excepción al actualizar la dependencia; plataformas sin binario compatible requieren una instalación con herramientas de compilación y una revisión de esta política.
+
+La configuración plana de ESLint utiliza el parser JSX incluido y una regla local para reconocer referencias a componentes; no añade dependencias. `npm test` conserva toda la suite del backend y agrega pruebas del cliente HTTP real. `npm run test:e2e` ejecuta Chromium instalado mediante CDP nativo con puertos, perfil, SQLite y archivos temporales, sin modificar datos locales.
+
 ### F2B-01 — Contactos sociales de un carácter (2026-10-21)
 
 La sección 5.3.8 permite nombres de usuario de Instagram y TikTok de 1 a 30 caracteres, pero el DDL y el diccionario exigían al menos 2 caracteres en `business_contacts.valor`. Con autorización del usuario, el CHECK pasa a `length(valor) BETWEEN 1 AND 200` en el DDL oficial y en la especificación maestra. No cambian los campos, endpoints ni las validaciones de teléfono o URL.

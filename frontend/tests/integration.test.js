@@ -1,0 +1,81 @@
+import { after, before, test } from 'node:test';
+import assert from 'node:assert/strict';
+import { fileURLToPath } from 'node:url';
+import { createServer } from 'vite';
+import { ESLint } from 'eslint';
+import { createTestApp } from '../../backend/tests/helpers/testApp.js';
+
+let fixture; let server; let vite; let api; let setToken;
+const originalWindow = globalThis.window;
+before(async () => {
+  fixture = createTestApp();
+  server = fixture.app.listen(0, '127.0.0.1');
+  await new Promise(resolve => server.once('listening', resolve));
+  globalThis.window = { location: { origin: `http://127.0.0.1:${server.address().port}` }, dispatchEvent() {} };
+  vite = await createServer({ root: fileURLToPath(new URL('../', import.meta.url)), server: { middlewareMode: true }, appType: 'custom' });
+  ({ api, setToken } = await vite.ssrLoadModule('/src/services/api.js'));
+});
+after(async () => {
+  if (vite) await vite.close();
+  if (server) await new Promise(resolve => server.close(resolve));
+  fixture?.close();
+  if (originalWindow === undefined) delete globalThis.window; else globalThis.window = originalWindow;
+});
+
+test('Cliente real: registro, aprobación, catálogo, privacidad, reporte y sanción entre tres roles', async () => {
+  setToken(null, { persist: false });
+  const categories = await api.get('/catalogs', { auth: false });
+  assert.equal(categories.data.categories.length, 8);
+  const form = new FormData();
+  for (const [key, value] of Object.entries({ nombre_completo: 'Estudiante F4', email_institucional: 'nuevo.f4@unison.mx', matricula_unison: '229000099', password: 'PruebaF42026!', nombre_negocio: 'Negocio F4', category_id: '2', descripcion: 'Prueba integrada' })) form.append(key, value);
+  form.append('credencial', new Blob([Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/x1cAAAAASUVORK5CYII=', 'base64')], { type: 'image/png' }), 'credencial.png');
+  const registration = await api.post('/auth/register-request', form, { auth: false });
+  const identity = { email_institucional: 'nuevo.f4@unison.mx', matricula_unison: '229000099' };
+  assert.equal((await api.post('/auth/request-status', identity, { auth: false })).data.estado_cuenta, 'pendiente');
+  await assert.rejects(api.post('/auth/login', { identificador: identity.email_institucional, password: 'PruebaF42026!' }, { auth: false }), error => error.code === 'ACCOUNT_PENDING');
+  const admin = await api.post('/auth/login', { identificador: 'admin@unison.mx', password: 'AdminUnison2026!' }, { auth: false });
+  setToken(admin.data.token, { persist: false });
+  const credential = await api.blob(`/admin/requests/${registration.data.user_id}/credential`);
+  assert(credential instanceof Blob); assert.equal(credential.type, 'image/png');
+  await api.patch(`/admin/requests/${registration.data.user_id}`, { decision: 'aprobada' });
+  const session = await api.post('/auth/login', { identificador: identity.email_institucional, password: 'PruebaF42026!' }, { auth: false });
+  setToken(session.data.token, { persist: false });
+  const product = new FormData();
+  product.append('nombre', 'Producto integrado'); product.append('descripcion', 'Producto de prueba'); product.append('precio', '35.50');
+  product.append('imagen', credential, 'producto.png');
+  const created = await api.post('/my-business/products', product);
+  const location = await api.patch('/my-business/location', { campus_zone_id: 1, mostrar_ubicacion: true, ubicacion_detalle: 'REFERENCIA_PRIVADA_F4' });
+  await api.patch('/my-business/location', { mostrar_ubicacion: false });
+  const preview = await api.get('/my-business/preview');
+  const publicView = await api.get(`/businesses/${location.data.slug}`, { auth: false });
+  assert.deepEqual(preview.data, publicView.data);
+  assert.equal(preview.data.ubicacion_detalle, null);
+  const report = await api.post('/reports', { business_id: location.data.id, product_id: created.data.id, motivo: 'otro', descripcion: 'Reporte integrado de prueba.' }, { auth: false });
+  await assert.rejects(api.get('/admin/stats'), error => error.status === 403);
+  setToken(admin.data.token, { persist: false });
+  const resolution = await api.patch(`/admin/reports/${report.data.id}`, { estado_reporte: 'resuelto_con_sancion', accion_automatica: 'ocultar_producto', motivo_sancion: 'Revisar imagen publicada.', notas_admin: 'Prueba integrada F4' });
+  assert.equal(resolution.data.estado_reporte, 'resuelto_con_sancion');
+  setToken(session.data.token, { persist: false });
+  const own = await api.get('/my-business');
+  assert.equal(own.data.products[0].estado, 'oculto_admin');
+  await assert.rejects(api.patch(`/my-business/products/${created.data.id}/status`, { estado: 'activo' }), error => error.code === 'PRODUCT_LOCKED');
+  const update = new FormData(); update.append('descripcion', 'Imagen y descripción corregidas.');
+  await api.put(`/my-business/products/${created.data.id}`, update);
+  assert.equal((await api.get('/my-business/preview')).data.products.length, 0);
+  setToken(admin.data.token, { persist: false });
+  assert.equal((await api.get('/admin/products', { params: { business_id: location.data.id } })).data[0].editado_tras_moderacion, true);
+  await api.patch(`/admin/products/${created.data.id}/moderate`, { ocultar: false });
+  await api.patch(`/admin/users/${registration.data.user_id}/suspend`, { suspend: true, motivo: 'Revisión de cuenta de prueba.' });
+  setToken(session.data.token, { persist: false });
+  await assert.rejects(api.get('/auth/me'), error => error.status === 401 || error.code === 'ACCOUNT_SUSPENDED');
+  await assert.rejects(api.get(`/businesses/${location.data.slug}`, { auth: false }), error => error.status === 404);
+});
+
+test('ESLint reconoce componentes JSX y detecta variables ausentes o sin uso', async () => {
+  const eslint = new ESLint();
+  const [valid] = await eslint.lintText("import { Heart } from 'lucide-react'; export default function Page() { return <Heart />; }", { filePath: 'src/fixture.jsx' });
+  assert.equal(valid.errorCount, 0);
+  const [invalid] = await eslint.lintText('const unused = 1; export default function Page() { return missing; }', { filePath: 'src/fixture.jsx' });
+  assert(invalid.messages.some(message => message.ruleId === 'no-undef'));
+  assert(invalid.messages.some(message => message.ruleId === 'no-unused-vars'));
+});
