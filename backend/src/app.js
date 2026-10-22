@@ -6,7 +6,7 @@ import { createApiRouter } from './routes/index.js';
 import { AppError } from './utils/AppError.js';
 import { notFound, errorHandler } from './middlewares/error.middleware.js';
 
-export function createApp({ config = env, configure } = {}) {
+export function createApp({ db, config = env, configure } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.use(helmet());
@@ -16,7 +16,7 @@ export function createApp({ config = env, configure } = {}) {
   } }));
   app.use(express.json({ limit: '1mb' }));
   app.use('/uploads', express.static(config.UPLOAD_DIR, { dotfiles: 'deny', index: false, redirect: false, fallthrough: true }));
-  app.use('/api', createApiRouter());
+  app.use('/api', createApiRouter({ db, config }));
   // Punto de composición para las suites temporales; no incorpora endpoints de fases posteriores.
   if (configure) configure(app);
   app.use(notFound);

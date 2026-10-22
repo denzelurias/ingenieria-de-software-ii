@@ -25,7 +25,7 @@ export function createTestApp({ seed = true, configure } = {}) {
   try {
     db = createDatabase(config, { seed: false });
     if (seed) seedDatabase(db, config);
-    const app = createApp({ config, configure: configure ? app => configure(app, { db, config }) : undefined });
+    const app = createApp({ db, config, configure: configure ? app => configure(app, { db, config }) : undefined });
     return { app, db, config, directory, close };
   } catch (error) { close(); throw error; }
 }
