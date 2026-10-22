@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router';
-import { Sprout } from 'lucide-react';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { FavoritesProvider } from './context/FavoritesContext.jsx';
@@ -10,8 +9,6 @@ import Footer from './components/layout/Footer.jsx';
 import EntrepreneurLayout from './components/layout/EntrepreneurLayout.jsx';
 import AdminLayout from './components/layout/AdminLayout.jsx';
 import RequireRole from './components/routing/RequireRole.jsx';
-import EmptyState from './components/common/EmptyState.jsx';
-import { ADMIN_LINKS } from './utils/constants.js';
 import ExplorePage from './pages/public/ExplorePage.jsx';
 import BusinessDetailPage from './pages/public/BusinessDetailPage.jsx';
 import FavoritesPage from './pages/public/FavoritesPage.jsx';
@@ -29,11 +26,13 @@ import ScheduleLocationPage from './pages/entrepreneur/ScheduleLocationPage.jsx'
 import ProfilePreviewPage from './pages/entrepreneur/ProfilePreviewPage.jsx';
 import NotificationsPage from './pages/entrepreneur/NotificationsPage.jsx';
 import AccountSettingsPage from './pages/entrepreneur/AccountSettingsPage.jsx';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
+import PendingRequestsPage from './pages/admin/PendingRequestsPage.jsx';
+import ReportsManagerPage from './pages/admin/ReportsManagerPage.jsx';
+import CategoriesManagerPage from './pages/admin/CategoriesManagerPage.jsx';
+import ModerationProductsPage from './pages/admin/ModerationProductsPage.jsx';
+import SystemMaintenancePage from './pages/admin/SystemMaintenancePage.jsx';
 
-// El panel administrativo conserva sus vistas provisionales hasta F3C.
-function PendingSection({ title = 'Próximamente', description = 'Estamos preparando esta sección. Pronto encontrarás aquí más herramientas para tu comunidad.', icon = Sprout }) {
-  return <div className="surface pending-section"><EmptyState icon={icon} title={title} description={description} /></div>;
-}
 function PublicLayout() { return <main id="contenido" tabIndex={-1} className="container section-space"><Outlet /></main>; }
 function RouteFocus() {
   const location = useLocation();
@@ -68,6 +67,13 @@ export default function App() {
         <Route path="notificaciones" element={<NotificationsPage />} />
         <Route path="cuenta" element={<AccountSettingsPage />} />
       </Route>
-      <Route path="/admin" element={<RequireRole role="admin"><AdminLayout /></RequireRole>}><Route index element={<PendingSection title="Resumen de la comunidad" />} />{ADMIN_LINKS.slice(1).map(link => <Route key={link.to} path={link.to.split('/').at(-1)} element={<PendingSection title={link.label} />} />)}</Route>
+      <Route path="/admin" element={<RequireRole role="admin"><AdminLayout /></RequireRole>}>
+        <Route index element={<AdminDashboardPage />} />
+        <Route path="solicitudes" element={<PendingRequestsPage />} />
+        <Route path="reportes" element={<ReportsManagerPage />} />
+        <Route path="categorias" element={<CategoriesManagerPage />} />
+        <Route path="moderacion" element={<ModerationProductsPage />} />
+        <Route path="mantenimiento" element={<SystemMaintenancePage />} />
+      </Route>
     </Routes><Footer /><BottomNav /></div></FavoritesProvider></AuthProvider></ToastProvider></BrowserRouter>;
 }
