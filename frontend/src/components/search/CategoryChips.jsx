@@ -1,0 +1,3 @@
+export default function CategoryChips({ categories = [], value = '', onChange }) {
+  return <div className="flex gap-2 overflow-x-auto py-2" aria-label="Categorías"><button className={`button shrink-0 ${!value ? 'button-primary' : 'button-secondary'}`} type="button" aria-pressed={!value} onClick={() => onChange('')}>Todas</button>{categories.map(category => <button key={category.id} type="button" className={`button shrink-0 ${String(value) === String(category.id) ? 'button-primary' : 'button-secondary'}`} aria-pressed={String(value) === String(category.id)} onClick={() => onChange(String(category.id))}>{category.nombre}</button>)}</div>;
+}
