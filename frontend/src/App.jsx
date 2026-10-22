@@ -11,7 +11,7 @@ import EntrepreneurLayout from './components/layout/EntrepreneurLayout.jsx';
 import AdminLayout from './components/layout/AdminLayout.jsx';
 import RequireRole from './components/routing/RequireRole.jsx';
 import EmptyState from './components/common/EmptyState.jsx';
-import { ADMIN_LINKS, ENTREPRENEUR_LINKS } from './utils/constants.js';
+import { ADMIN_LINKS } from './utils/constants.js';
 import ExplorePage from './pages/public/ExplorePage.jsx';
 import BusinessDetailPage from './pages/public/BusinessDetailPage.jsx';
 import FavoritesPage from './pages/public/FavoritesPage.jsx';
@@ -22,8 +22,15 @@ import RegisterRequestPage from './pages/auth/RegisterRequestPage.jsx';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage.jsx';
 import AccountStatusPage from './pages/auth/AccountStatusPage.jsx';
+import DashboardPage from './pages/entrepreneur/DashboardPage.jsx';
+import ProfileEditorPage from './pages/entrepreneur/ProfileEditorPage.jsx';
+import CatalogManagerPage from './pages/entrepreneur/CatalogManagerPage.jsx';
+import ScheduleLocationPage from './pages/entrepreneur/ScheduleLocationPage.jsx';
+import ProfilePreviewPage from './pages/entrepreneur/ProfilePreviewPage.jsx';
+import NotificationsPage from './pages/entrepreneur/NotificationsPage.jsx';
+import AccountSettingsPage from './pages/entrepreneur/AccountSettingsPage.jsx';
 
-// Los paneles conservan sus vistas provisionales hasta F3B y F3C.
+// El panel administrativo conserva sus vistas provisionales hasta F3C.
 function PendingSection({ title = 'Próximamente', description = 'Estamos preparando esta sección. Pronto encontrarás aquí más herramientas para tu comunidad.', icon = Sprout }) {
   return <div className="surface pending-section"><EmptyState icon={icon} title={title} description={description} /></div>;
 }
@@ -52,7 +59,15 @@ export default function App() {
       <Route path="/restablecer-password" element={<ResetPasswordPage />} />
       <Route path="*" element={<NotFoundPage />} />
       </Route>
-      <Route path="/panel" element={<RequireRole role="emprendedor"><EntrepreneurLayout /></RequireRole>}><Route index element={<PendingSection title="Bienvenido a tu espacio" />} />{ENTREPRENEUR_LINKS.slice(1).map(link => <Route key={link.to} path={link.to.split('/').at(-1)} element={<PendingSection title={link.label} />} />)}</Route>
+      <Route path="/panel" element={<RequireRole role="emprendedor"><EntrepreneurLayout /></RequireRole>}>
+        <Route index element={<DashboardPage />} />
+        <Route path="perfil" element={<ProfileEditorPage />} />
+        <Route path="catalogo" element={<CatalogManagerPage />} />
+        <Route path="horarios" element={<ScheduleLocationPage />} />
+        <Route path="vista-previa" element={<ProfilePreviewPage />} />
+        <Route path="notificaciones" element={<NotificationsPage />} />
+        <Route path="cuenta" element={<AccountSettingsPage />} />
+      </Route>
       <Route path="/admin" element={<RequireRole role="admin"><AdminLayout /></RequireRole>}><Route index element={<PendingSection title="Resumen de la comunidad" />} />{ADMIN_LINKS.slice(1).map(link => <Route key={link.to} path={link.to.split('/').at(-1)} element={<PendingSection title={link.label} />} />)}</Route>
     </Routes><Footer /><BottomNav /></div></FavoritesProvider></AuthProvider></ToastProvider></BrowserRouter>;
 }
