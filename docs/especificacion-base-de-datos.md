@@ -181,7 +181,7 @@ Tabla agrupada `WITHOUT ROWID`. Siempre existen exactamente 7 filas por negocio 
 | `id` | `INTEGER` | `NOT NULL` | `AUTOINCREMENT` | `PRIMARY KEY` | Identificador del contacto. |
 | `business_id` | `INTEGER` | `NOT NULL` | — | `REFERENCES businesses(id) ON DELETE CASCADE` | Negocio propietario. |
 | `tipo_contacto` | `TEXT` | `NOT NULL` | — | `CHECK (IN ('whatsapp','telefono','instagram','facebook','tiktok','otro'))` | Canal de comunicación. |
-| `valor` | `TEXT` | `NOT NULL` | — | `CHECK (length(valor) BETWEEN 2 AND 200)`, `UNIQUE(business_id, tipo_contacto, valor)` | Valor normalizado: 10 dígitos para WhatsApp/teléfono, usuario sin `@` para Instagram/TikTok, URL `https` para Facebook/otro. |
+| `valor` | `TEXT` | `NOT NULL` | — | `CHECK (length(valor) BETWEEN 1 AND 200)`, `UNIQUE(business_id, tipo_contacto, valor)` | Valor normalizado: 10 dígitos para WhatsApp/teléfono, usuario de 1–30 caracteres sin `@` para Instagram/TikTok, URL `https` para Facebook/otro. |
 | `etiqueta` | `TEXT` | `NULL` | `NULL` | `CHECK (IS NULL OR length(etiqueta) <= 40)` | Etiqueta opcional (*"Pedidos por WhatsApp"*). |
 | `es_principal` | `INTEGER` | `NOT NULL` | `0` | `CHECK (IN (0, 1))` + índice único parcial `uq_contacts_principal` | Indica el contacto destacado del negocio (máximo uno por negocio). |
 | `orden` | `INTEGER` | `NOT NULL` | `0` | — | Posición de visualización en `ContactButtons.jsx`. |
@@ -314,3 +314,40 @@ Toda operación que modifique más de una tabla o fila debe ejecutarse dentro de
 
 * **Mecanismo de respaldo:** se utiliza la API nativa de respaldo en línea `await db.backup(destinationPath)` provista por `better-sqlite3`. A diferencia de copiar el archivo `.sqlite` con `fs.copyFile` (que puede producir una copia corrupta si hay páginas pendientes en el archivo `.sqlite-wal`), `db.backup()` copia página por página de forma transaccionalmente consistente sin bloquear las lecturas del servidor.
 * **Nomenclatura y retención:** los archivos se guardan en `backend/database/backups/emprendebuho_YYYYMMDD_HHMMSS.sqlite`. Tras cada respaldo exitoso se conservan los `BACKUP_KEEP` (por defecto `10`) archivos más recientes y se eliminan los más antiguos.
+
+## 7. Actualización del CHECK de contactos en bases existentes (F2B-01)
+
+Las bases nuevas utilizan el DDL oficial con `length(valor) BETWEEN 1 AND 200`, coherente con los usuarios sociales de un carácter de §5.3.8. En una base creada con el CHECK anterior, detener el servidor y aplicar la siguiente transacción con una conexión que tenga `foreign_keys = ON`. Conservar un respaldo antes de migrar. Este procedimiento se aplica una sola vez a la restricción anterior; no borra usuarios ni datos de otras tablas.
+
+```sql
+BEGIN IMMEDIATE;
+CREATE TEMP TABLE contact_sequence_f2b AS
+  SELECT seq FROM sqlite_sequence WHERE name = 'business_contacts';
+CREATE TABLE business_contacts_f2b (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  business_id INTEGER NOT NULL REFERENCES businesses(id) ON DELETE CASCADE,
+  tipo_contacto TEXT NOT NULL CHECK (tipo_contacto IN ('whatsapp', 'telefono', 'instagram', 'facebook', 'tiktok', 'otro')),
+  valor TEXT NOT NULL CHECK (length(valor) BETWEEN 1 AND 200),
+  etiqueta TEXT CHECK (etiqueta IS NULL OR length(etiqueta) <= 40),
+  es_principal INTEGER NOT NULL DEFAULT 0 CHECK (es_principal IN (0, 1)),
+  orden INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (business_id, tipo_contacto, valor)
+);
+INSERT INTO business_contacts_f2b
+  SELECT id, business_id, tipo_contacto, valor, etiqueta, es_principal, orden, created_at FROM business_contacts;
+DROP TABLE business_contacts;
+ALTER TABLE business_contacts_f2b RENAME TO business_contacts;
+CREATE UNIQUE INDEX uq_contacts_principal ON business_contacts(business_id) WHERE es_principal = 1;
+UPDATE sqlite_sequence
+  SET seq = max(seq, COALESCE((SELECT seq FROM contact_sequence_f2b), 0))
+  WHERE name = 'business_contacts';
+DROP TABLE contact_sequence_f2b;
+INSERT INTO audit_logs (actor_id, accion, entidad_tipo, detalles)
+  VALUES (NULL, 'migrar_contactos', 'system', '{"cambio":"F2B-01"}');
+COMMIT;
+PRAGMA foreign_key_check;
+PRAGMA integrity_check;
+```
+
+Si una sentencia falla antes del COMMIT, ejecutar ROLLBACK. Verificar que las filas de contactos, su secuencia y el índice único se conserven, que `foreign_key_check` no devuelva filas y que `integrity_check` devuelva `ok`.

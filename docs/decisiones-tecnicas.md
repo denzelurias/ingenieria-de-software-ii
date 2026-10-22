@@ -74,3 +74,11 @@ En la v1, la tabla de Historias de Usuario (§3.3) y las tablas de la API (§5) 
 | **C14** | Contraste insuficiente del dorado `#F2A900` sobre blanco (`1.9:1`). | Regla explícita en §6.1: el dorado solo se usa como fondo con texto `#002D62` (`7.5:1`, WCAG AAA). |
 | **C15** | Columnas `updated_at` estáticas en SQLite. | Triggers `AFTER UPDATE` (`trg_*_updated_at`) en `schema.sql`. |
 | **C16** | Imágenes para cuentas demo sin versionar binarios pesados. | `seed.js` genera placeholders SVG deterministas en `uploads/` y `storage/credentials/`. |
+
+## 5. Decisiones durante la construcción
+
+### F2B-01 — Contactos sociales de un carácter (2026-10-21)
+
+La sección 5.3.8 permite nombres de usuario de Instagram y TikTok de 1 a 30 caracteres, pero el DDL y el diccionario exigían al menos 2 caracteres en `business_contacts.valor`. Con autorización del usuario, el CHECK pasa a `length(valor) BETWEEN 1 AND 200` en el DDL oficial y en la especificación maestra. No cambian los campos, endpoints ni las validaciones de teléfono o URL.
+
+Las bases existentes requieren reconstruir únicamente `business_contacts` en una transacción, conservando filas, identificadores, secuencia AUTOINCREMENT e índice de contacto principal. El procedimiento está en la sección 7 de `docs/especificacion-base-de-datos.md`; `CREATE TABLE IF NOT EXISTS` no modifica un CHECK existente. No se debe usar `db:reset` para aplicar este ajuste a una base con datos.
