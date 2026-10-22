@@ -89,7 +89,8 @@ if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === imp
     assert(response.headers['x-content-type-options']);
     assert(!response.headers['x-powered-by']);
     await request(fixture.app).get('/uploads/profiles/demo-1.svg').expect(200);
-    for (const url of ['/storage/credentials/demo-1.svg', '/uploads/credentials/demo-1.svg', '/api/admin/requests/2/credential', '/ruta-inexistente']) {
+    await request(fixture.app).get('/api/admin/requests/2/credential').expect(401);
+    for (const url of ['/storage/credentials/demo-1.svg', '/uploads/credentials/demo-1.svg', '/ruta-inexistente']) {
       const missing = await request(fixture.app).get(url).expect(404);
       assert.equal(missing.body.error.code, 'NOT_FOUND');
     }

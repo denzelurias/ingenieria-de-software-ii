@@ -1,0 +1,32 @@
+import { Router } from 'express';
+import { createRequireAuth } from '../middlewares/auth.middleware.js';
+import { requireRole } from '../middlewares/role.middleware.js';
+import { validate } from '../middlewares/validate.middleware.js';
+import { createAdminService } from '../services/admin.service.js';
+import { createMaintenanceService } from '../services/maintenance.service.js';
+import { createAdminController } from '../controllers/admin.controller.js';
+import * as schemas from '../validators/admin.validator.js';
+export function createAdminRouter(db, config) {
+  const router = Router();
+  const controller = createAdminController(createAdminService(db, config), createMaintenanceService(db, config));
+  router.use(createRequireAuth(db, config), requireRole('admin'));
+  router.get('/stats', controller.stats);
+  router.get('/requests', validate({ query: schemas.requestsQuery }), controller.requests);
+  router.get('/requests/:userId/credential', validate({ params: schemas.userParams }), controller.credential);
+  router.patch('/requests/:userId', validate({ params: schemas.userParams, body: schemas.decisionBody }), controller.decide);
+  router.patch('/users/:userId/suspend', validate({ params: schemas.userParams, body: schemas.suspensionBody }), controller.suspend);
+  router.get('/products', validate({ query: schemas.productsQuery }), controller.products);
+  router.patch('/products/:productId/moderate', validate({ params: schemas.productParams, body: schemas.moderationBody }), controller.moderate);
+  router.get('/reports', validate({ query: schemas.reportsQuery }), controller.reports);
+  router.patch('/reports/:reportId', validate({ params: schemas.reportParams, body: schemas.resolveBody }), controller.resolve);
+  router.get('/categories', controller.categories);
+  router.post('/categories', validate({ body: schemas.createCategoryBody }), controller.createCategory);
+  router.put('/categories/:id', validate({ params: schemas.categoryParams, body: schemas.editCategoryBody }), controller.editCategory);
+  router.get('/maintenance/health', controller.health);
+  router.post('/maintenance/run-inactivity-check', controller.inactivity);
+  router.post('/maintenance/backup', controller.backup);
+  router.get('/maintenance/backups/:filename', validate({ params: schemas.backupParams }), controller.download);
+  router.post('/maintenance/cleanup-orphans', controller.cleanup);
+  router.get('/audit-logs', validate({ query: schemas.auditQuery }), controller.auditLogs);
+  return router;
+}

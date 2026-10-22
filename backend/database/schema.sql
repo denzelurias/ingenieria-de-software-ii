@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS business_contacts (
     tipo_contacto TEXT NOT NULL CHECK (
         tipo_contacto IN ('whatsapp', 'telefono', 'instagram', 'facebook', 'tiktok', 'otro')
     ),
-    valor TEXT NOT NULL CHECK (length(valor) BETWEEN 2 AND 200),
+    valor TEXT NOT NULL CHECK (length(valor) BETWEEN 1 AND 200),
     etiqueta TEXT CHECK (etiqueta IS NULL OR length(etiqueta) <= 40),
     es_principal INTEGER NOT NULL DEFAULT 0 CHECK (es_principal IN (0, 1)),
     orden INTEGER NOT NULL DEFAULT 0,
