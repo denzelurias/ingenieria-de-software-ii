@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router';
+import { Rocket } from 'lucide-react';
 import { ToastProvider } from './context/ToastContext.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import { FavoritesProvider } from './context/FavoritesContext.jsx';
@@ -34,6 +35,28 @@ import ModerationProductsPage from './pages/admin/ModerationProductsPage.jsx';
 import SystemMaintenancePage from './pages/admin/SystemMaintenancePage.jsx';
 
 function PublicLayout() { return <main id="contenido" tabIndex={-1} className="container section-space"><Outlet /></main>; }
+function ScrollChrome() {
+  const [progress, setProgress] = useState(0);
+  const [showTop, setShowTop] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      setProgress(height > 0 ? Math.min(100, (winScroll / height) * 100) : 0);
+      setShowTop(winScroll > 450);
+      const header = document.querySelector('.site-header');
+      if (header) header.classList.toggle('header-compact', winScroll > 60);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return <>
+    <div aria-hidden="true" className="fixed top-0 left-0 h-1 bg-gradient-to-r from-brand-gold via-brand-gold-light to-brand-cobalt z-50 transition-all duration-100 pointer-events-none" style={{ width: `${progress}%` }} />
+    <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={`fixed bottom-22 md:bottom-6 right-5 z-30 w-11 h-11 rounded-full bg-brand-navy text-white font-bold shadow-xl hover:scale-110 transition-all flex items-center justify-center group ${showTop ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} aria-label="Volver arriba">
+      <Rocket size={19} className="group-hover:-translate-y-0.5 transition-transform text-brand-gold" aria-hidden="true" />
+    </button>
+  </>;
+}
 function RouteFocus() {
   const location = useLocation();
   useEffect(() => {
@@ -47,7 +70,7 @@ function RouteFocus() {
   return null;
 }
 export default function App() {
-  return <BrowserRouter><ToastProvider><AuthProvider><FavoritesProvider><div className="app-shell"><a className="skip-link" href="#contenido">Saltar al contenido</a><RouteFocus /><Navbar />
+  return <BrowserRouter><ToastProvider><AuthProvider><FavoritesProvider><div className="app-shell"><a className="skip-link" href="#contenido">Saltar al contenido</a><ScrollChrome /><RouteFocus /><Navbar />
     <Routes><Route element={<PublicLayout />}>
       <Route path="/" element={<ExplorePage />} />
       <Route path="/explorar" element={<ExplorePage />} />

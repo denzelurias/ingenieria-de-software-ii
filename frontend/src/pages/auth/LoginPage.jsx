@@ -5,7 +5,7 @@ import ErrorAlert from '../../components/common/ErrorAlert.jsx';
 import Spinner from '../../components/common/Spinner.jsx';
 
 export function AuthFrame({ title, description, children }) {
-  return <section className="surface p-5 md:p-8 max-w-xl mx-auto w-full"><h1 className="text-3xl font-heading text-unison-blue">{title}</h1>{description && <p className="text-slate-600 mt-3 mb-6">{description}</p>}{children}</section>;
+  return <section className="surface relative p-6 md:p-8 max-w-xl mx-auto w-full border-brand-navy/15 shadow-lg"><div aria-hidden="true" className="washi-tape absolute -top-2.5 left-1/2 -translate-x-1/2 w-28 h-5" /><span className="eyebrow">COMUNIDAD UNISON</span><h1 className="text-3xl font-heading font-black text-brand-navy mt-1">{title}</h1>{description && <p className="text-slate-600 text-sm sm:text-base mt-2 mb-6">{description}</p>}{children}</section>;
 }
 export function FormField({ label, name, error, ...props }) {
   return <label className="field-label" htmlFor={name}>{label}<input id={name} name={name} className="w-full mt-2" aria-invalid={Boolean(error)} aria-describedby={error ? `${name}-error` : undefined} {...props} />{error && <span id={`${name}-error`} className="field-error block">{error}</span>}</label>;
