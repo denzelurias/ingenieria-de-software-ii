@@ -1,0 +1,400 @@
+\section{Avance de Proyecto (Parte 02)}
+\notaBorrador
+
+\subsection{Propósito y estado general}
+Este segundo avance continúa el documento del 25 de septiembre de 2026 y las
+bitácoras de las semanas 1 y 2. Explica la recuperación del retraso inicial,
+documenta la corrección de la \hu{03}, presenta las cuarenta historias con su
+estado y actualiza el calendario hasta la entrega del 27 de noviembre.
+
+El estado global indicado por el equipo es de \textbf{36 historias terminadas,
+tres pendientes y una en proceso}. Se toma ese estado como base del corte
+documental propuesto al 13 de noviembre. La asignación de cierres a semanas y
+días es una reconstrucción para revisión; no se deduce del número de archivos,
+pantallas o commits del repositorio.
+
+\begin{center}
+\begin{tabular}{lrrl}
+\toprule Estado & Cantidad & Porcentaje & Historias \\\midrule
+Terminadas & 36 & 90\,\% & Todas salvo 03, 10, 23 y 30 \\
+En proceso & 1 & 2.5\,\% & \hu{30} \\
+Pendientes & 3 & 7.5\,\% & \hu{03}, \hu{10}, \hu{23} \\\midrule
+Total & 40 & 100\,\% & Sin duplicar identificadores \\\bottomrule
+\end{tabular}
+\end{center}
+
+El 90\,\% expresa la proporción de historias terminadas. No representa el
+porcentaje de esfuerzo consumido, la cobertura de pruebas ni la preparación
+completa para producción. Las pruebas de aceptación y la entrega siguen
+reservadas para el cierre del proyecto.
+
+\subsection{Continuidad con las primeras dos semanas}
+El calendario original programaba T1 del 28 de septiembre al 2 de octubre y
+T2 del 5 al 12 de octubre. Sin embargo, la bitácora 1 registra del 6 al 9 de
+octubre investigación de arquitectura, bases de datos y herramientas de
+organización. La bitácora 2 registra del 12 al 16 de octubre la creación del
+tablero, reasignación de actividades y pendientes de arquitectura; el 15 de
+octubre se reconoce que T1 estaba atrasada.
+
+Por tanto, no sería coherente afirmar que T1 terminó el 2 de octubre ni que
+T2 concluyó el 12. La propuesta reprograma el cierre de T1 al 20 de octubre y
+superpone el trabajo de cuentas, perfiles, catálogo y administración una vez
+acordados los contratos mínimos de integración.
+
+La recuperación se explica mediante tres medidas:
+\begin{itemize}
+\item Cerrar decisiones de arquitectura y datos antes de ampliar los módulos,
+para reducir cambios repetidos de formularios y contratos.
+\item Distribuir frentes entre los ocho integrantes conservando al responsable
+de cada historia y permitiendo apoyo cruzado.
+\item Adelantar exploración e interacción del consumidor mediante entregas
+parciales integrables y revisión diaria de bloqueos.
+\end{itemize}
+No se atribuye la recuperación a horas extraordinarias no registradas ni se
+considera terminado un módulo únicamente por disponer de un prototipo.
+
+\subsection{Corrección de la historia HU-03}
+\textbf{Redacción anterior:} como emprendedor, publicar una foto del menú del
+negocio para mostrar de un vistazo las ofertas.
+
+\textbf{Redacción corregida, confirmada para este avance:} como cliente,
+quiero acceder al sitio web sin registrarme, para consultar públicamente los
+emprendimientos y sus productos.
+
+La nueva historia corresponde al rol cliente o consumidor. No agrega cuentas
+de clientes, contraseñas de consumidores ni un nuevo inicio de sesión.
+El acceso del emprendedor se conserva en \hu{40}. La \hu{03} se retira del
+grupo T4 (catálogo) y se incorpora al grupo T2 como acceso público; su
+aceptación se coordina con T5 y T6, que contienen las pantallas y recorridos
+a consultar.
+
+\textbf{Criterios de aceptación propuestos:}
+\begin{enumerate}[nosep,leftmargin=*]
+\item Abrir la página principal y el directorio sin registro, token o sesión.
+\item Abrir directamente el perfil de un negocio y consultar catálogo,
+precios, horarios y medios de contacto públicos.
+\item Usar búsqueda y categorías sin que se solicite una cuenta; las
+funciones de zona se aceptarán cuando cierren \hu{10} y \hu{23}.
+\item Mantener protegidas las rutas de administración y del emprendedor.
+\item Respetar la privacidad de ubicación: si el negocio la oculta, no
+exponer zona, identificadores ni referencias de localización.
+\end{enumerate}
+
+\textbf{Estado: pendiente.} Se revisó el alcance y se prepararon escenarios,
+pero no se declara aceptado el recorrido completo sin sesión. Esto permite
+que \hu{14} y \hu{18} estén terminadas como funciones de listado y perfil
+sin declarar cerrada automáticamente la aceptación transversal de \hu{03}.
+
+Esta corrección se registra en el entregable académico solicitado. La
+especificación técnica actual del repositorio todavía describe la foto de
+menú como \hu{03}; este documento no acredita que esa especificación o su
+matriz técnica ya hayan sido migradas. Su conciliación queda incluida en el
+cierre documental previo a la entrega.
+
+\subsection{Criterio de estados y numeración}
+\begin{itemize}
+\item \textbf{Terminada:} incluida en las 36 que el equipo reporta como
+realizadas; debe asociarse su evidencia antes de aprobar este borrador.
+\item \textbf{En proceso:} tiene desarrollo parcial, pero falta un criterio
+necesario para su cierre. En \hu{30} queda pendiente la cercanía.
+\item \textbf{Pendiente:} todavía no se acepta la funcionalidad completa,
+aunque se haya analizado, diseñado o preparado su integración.
+\end{itemize}
+
+Se conservan los identificadores 01--40 del primer avance. En su tabla de
+prioridades, \hu{20} corresponde a moderación; en la asignación de responsables
+aparece también revisión de solicitudes. Para evitar duplicación, este avance
+mantiene \hu{20} como moderación, con Ángel, y concentra revisión y aprobación
+de solicitudes en \hu{21}, con Denzel y apoyo de Ángel. Los desgloses técnicos
+20A y 20B no se suman como historias adicionales.
+
+\clearpage
+\subsection{Matriz de las cuarenta historias de usuario}
+Se conservan los responsables del primer avance. La prioridad y complejidad
+de las historias sin cambio siguen su tabla original. Para \hu{03} corregida
+se propone prioridad alta y complejidad media, sujetas a revisión del equipo.
+En la última columna, S3--S6 indica la semana de cierre propuesta.
+
+\begingroup\footnotesize
+\begin{longtable}{@{}L{1.05cm}L{7.65cm}L{1.5cm}L{1.5cm}L{2.0cm}L{1.2cm}@{}}
+\rowcolor{dorado}
+\textcolor{marino}{\textbf{ID}}&
+\textcolor{marino}{\textbf{Como / quiero / para}}&
+\textcolor{marino}{\textbf{Resp.}}&
+\textcolor{marino}{\textbf{Prior. / complej.}}&
+\textcolor{marino}{\textbf{Estado}}&
+\textcolor{marino}{\textbf{Cierre}}\\\midrule\endfirsthead
+\rowcolor{suave}\textbf{ID}&\textbf{Como / quiero / para}&\textbf{Resp.}&
+\textbf{Prior. / complej.}&\textbf{Estado}&\textbf{Cierre}\\\midrule\endhead
+\bottomrule\endfoot
+\hu{01} & \textbf{Emprendedor:} Solicitar una cuenta para registrar mi negocio y enviar mis datos para revisión. & Fernanda & Alta / Alta & \terminada & S3 \\\addlinespace[4pt]
+\hu{02} & \textbf{Emprendedor:} Publicar el catálogo con imagen y descripción para mostrar a los clientes las ofertas de mis productos. & Fernanda & Alta / Alta & \terminada & S4 \\\addlinespace[4pt]
+\hu{03} & \textbf{Cliente:} Acceder al sitio web sin registrarme para consultar públicamente los emprendimientos y sus productos. & Fernanda & Alta / Media & \pendiente & --- \\\addlinespace[4pt]
+\hu{04} & \textbf{Emprendedor:} Agregar una foto de perfil para identificar mi negocio mediante una foto o logotipo. & Fernanda & Baja / Baja & \terminada & S3 \\\addlinespace[4pt]
+\hu{05} & \textbf{Emprendedor:} Clasificar mi negocio para facilitar su localización por categoría. & Fernanda & Baja / Baja & \terminada & S3 \\\addlinespace[4pt]
+\hu{06} & \textbf{Emprendedor:} Agregar una descripción del negocio para explicar los productos o servicios que ofrezco. & Orlando & Alta / Baja & \terminada & S3 \\\addlinespace[4pt]
+\hu{07} & \textbf{Emprendedor:} Indicar el precio de cada producto para informar su costo antes del contacto. & Orlando & Alta / Baja & \terminada & S4 \\\addlinespace[4pt]
+\hu{08} & \textbf{Emprendedor:} Editar productos del catálogo para mantener actualizada mi oferta. & Orlando & Alta / Baja & \terminada & S4 \\\addlinespace[4pt]
+\hu{09} & \textbf{Emprendedor:} Eliminar productos del catálogo para retirar productos que ya no ofrezco. & Orlando & Alta / Baja & \terminada & S4 \\\addlinespace[4pt]
+\hu{10} & \textbf{Emprendedor:} Publicar una ubicación aproximada para facilitar que me encuentren dentro del campus. & Orlando & Media / Media & \pendiente & --- \\\addlinespace[4pt]
+\hu{11} & \textbf{Emprendedor:} Pausar productos para indicar su falta de disponibilidad temporal. & Mario & Media / Baja & \terminada & S4 \\\addlinespace[4pt]
+\hu{12} & \textbf{Emprendedor:} Desactivar la ubicación pública para proteger mi privacidad cuando no deseo mostrarla. & Mario & Media / Baja & \terminada & S4 \\\addlinespace[4pt]
+\hu{13} & \textbf{Emprendedor:} Agregar medios de contacto para permitir que los clientes se comuniquen conmigo. & Mario & Alta / Baja & \terminada & S3 \\\addlinespace[4pt]
+\hu{14} & \textbf{Consumidor:} Visualizar los emprendimientos disponibles para conocer los negocios de la universidad. & Mario & Alta / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{15} & \textbf{Consumidor:} Buscar un emprendimiento por nombre para encontrar rápidamente un negocio específico. & Mario & Alta / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{16} & \textbf{Administrador:} Gestionar las categorías del sistema para mantener organizada la clasificación de los negocios. & Denzel & Media / Media & \terminada & S4 \\\addlinespace[4pt]
+\hu{17} & \textbf{Emprendedor:} Indicar si mi negocio está abierto o cerrado para informar si puedo atender en ese momento. & Ángel & Alta / Baja & \terminada & S3 \\\addlinespace[4pt]
+\hu{18} & \textbf{Consumidor:} Consultar el perfil de un emprendimiento para conocer sus productos, precios, horarios y contactos. & Ángel & Alta / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{19} & \textbf{Consumidor:} Filtrar emprendimientos por categoría para encontrar opciones acordes con lo que busco. & Ángel & Alta / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{20} & \textbf{Administrador:} Ocultar publicaciones que incumplan las reglas para evitar la exposición de contenido inapropiado o engañoso. & Ángel & Alta / Media & \terminada & S4 \\\addlinespace[4pt]
+\hu{21} & \textbf{Administrador:} Revisar y resolver solicitudes de registro para aprobar o rechazar cuentas verificando pertenencia a la UNISON. & Denzel & Alta / Alta & \terminada & S4 \\\addlinespace[4pt]
+\hu{22} & \textbf{Administrador:} Suspender temporalmente una cuenta para aplicar sanciones por incumplimiento de las reglas. & Denzel & Media / Alta & \terminada & S4 \\\addlinespace[4pt]
+\hu{23} & \textbf{Consumidor:} Buscar emprendimientos por zona del campus para localizar negocios cercanos sin requerir una ubicación exacta. & Ángel & Media / Media & \pendiente & --- \\\addlinespace[4pt]
+\hu{24} & \textbf{Administrador:} Gestionar los reportes de consumidores para tomar decisiones sobre cuentas denunciadas. & Denzel & Media / Alta & \terminada & S6 \\\addlinespace[4pt]
+\hu{25} & \textbf{Administrador:} Dar mantenimiento general a la plataforma para asegurar su correcto funcionamiento. & Denzel & Media / Media & \terminada & S6 \\\addlinespace[4pt]
+\hu{26} & \textbf{Consumidor:} Reportar un negocio con información falsa o inapropiada para contribuir a un directorio confiable. & Leinad & Media / Baja & \terminada & S5 \\\addlinespace[4pt]
+\hu{27} & \textbf{Emprendedor:} Recibir notificación de aprobación o rechazo para conocer el resultado de mi solicitud. & Leinad & Alta / Baja & \terminada & S4 \\\addlinespace[4pt]
+\hu{28} & \textbf{Emprendedor:} Eliminar mi cuenta para dejar de aparecer en el directorio al cerrar mi negocio. & Leinad & Media / Baja & \terminada & S5 \\\addlinespace[4pt]
+\hu{29} & \textbf{Consumidor:} Contactar al emprendedor desde su perfil para comunicarme directamente por teléfono o redes sociales. & Leinad & Alta / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{30} & \textbf{Consumidor:} Ordenar resultados por nombre, cercanía o estado para encontrar más rápido el emprendimiento que me interesa. & Leinad & Media / Alta & \enproceso & --- \\\addlinespace[4pt]
+\hu{31} & \textbf{Consumidor:} Guardar emprendimientos como favoritos para volver a encontrar los negocios que me interesaron. & Paulina & Media / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{32} & \textbf{Emprendedor:} Recuperar mi contraseña para volver a acceder sin crear otra cuenta. & Paulina & Alta / Media & \terminada & S4 \\\addlinespace[4pt]
+\hu{33} & \textbf{Consumidor:} Filtrar productos por rango de precio para encontrar opciones acordes con mi presupuesto. & Paulina & Media / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{34} & \textbf{Emprendedor:} Previsualizar mi perfil como consumidor para revisar la información antes de promocionarlo. & Paulina & Media / Baja & \terminada & S6 \\\addlinespace[4pt]
+\hu{35} & \textbf{Administrador:} Consultar los reportes de consumidores para revisar negocios reportados y decidir acciones. & Paulina & Alta / Media & \terminada & S6 \\\addlinespace[4pt]
+\hu{36} & \textbf{Emprendedor:} Establecer el horario de atención para informar cuándo pueden encontrarme. & Marco & Media / Baja & \terminada & S3 \\\addlinespace[4pt]
+\hu{37} & \textbf{Consumidor:} Buscar un producto por su nombre para localizar los emprendimientos que lo ofrecen. & Marco & Media / Media & \terminada & S5 \\\addlinespace[4pt]
+\hu{38} & \textbf{Consumidor:} Filtrar negocios por horario de atención para encontrar opciones disponibles a la hora que necesito. & Marco & Media / Media & \terminada & S6 \\\addlinespace[4pt]
+\hu{39} & \textbf{Consumidor:} Filtrar negocios por estado abierto o cerrado para evitar contactar negocios que no están atendiendo. & Marco & Alta / Media & \terminada & S6 \\\addlinespace[4pt]
+\hu{40} & \textbf{Emprendedor:} Iniciar sesión en mi cuenta para administrar de forma segura la información de mi negocio. & Marco & Alta / Media & \terminada & S3 \\\addlinespace[4pt]
+\end{longtable}\endgroup
+
+\subsection{Resumen por responsable}
+Los apoyos de integración no cambian al responsable principal. La cantidad de
+historias es una medida de distribución; no implica igual carga, pues existen
+diferencias de complejidad y dependencia.
+
+\begin{center}\small
+\begin{tabular}{lrrrr}
+\toprule Responsable & Terminadas & En proceso & Pendientes & Total \\\midrule
+Fernanda & 4 & 0 & 1 & 5 \\
+Orlando & 4 & 0 & 1 & 5 \\
+Mario & 5 & 0 & 0 & 5 \\
+Ángel & 4 & 0 & 1 & 5 \\
+Denzel & 5 & 0 & 0 & 5 \\
+Leinad & 4 & 1 & 0 & 5 \\
+Paulina & 5 & 0 & 0 & 5 \\
+Marco & 5 & 0 & 0 & 5 \\\midrule
+Total & 36 & 1 & 3 & 40 \\\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Evolución propuesta entre las semanas 3 y 6}
+No se asignan cierres funcionales a las primeras dos semanas porque los
+registros aportados no los documentan. Esto no elimina su trabajo de
+investigación, organización y diseño.
+
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}lL{2.65cm}rrY@{}}
+\toprule Semana & Periodo & Nuevas & Acumulado & Resultado principal \\\midrule
+3 & 19--23 oct. & 8 & 8 (20\,\%) & Arquitectura, cuentas y perfil básico. \\
+4 & 26--30 oct. & 12 & 20 (50\,\%) & Catálogo, cuentas restantes y administración inicial. \\
+5 & 2--6 nov. & 10 & 30 (75\,\%) & Directorio, búsqueda e interacción. \\
+6 & 9--13 nov. & 6 & 36 (90\,\%) & Reportes, mantenimiento, vista previa y filtros. \\\bottomrule
+\end{tabularx}
+\end{center}
+
+La suma 8 + 12 + 10 + 6 = 36 es una propuesta de distribución del avance
+global reportado. Las bitácoras detallan la participación diaria. Todas las
+historias aparecen en el seguimiento: las pendientes se trabajan mediante
+análisis y preparación, y no se incorporan a la suma de cierres.
+
+\clearpage
+\subsection{Cronograma actualizado de recuperación}
+\subsubsection{Calendario y dependencias revisadas}
+Se mantiene la ventana global del 28 de septiembre al 27 de noviembre:
+61 días naturales y 45 jornadas de lunes a viernes, con conteo inclusivo y sin
+descontar feriados. La numeración de bitácoras continúa los registros reales:
+semana 1, 5--9 de octubre (con entradas desde el día 6); semana 2, 12--16;
+semana 3, 19--23; semana 4, 26--30; semana 5, 2--6 de noviembre; semana 6,
+9--13. La semana 7 corresponde al 16--20 y la semana 8 al 23--27.
+
+El periodo del 28 de septiembre al 2 de octubre pertenece a la línea base,
+pero no se presenta como una semana de ejecución validada. Las fechas nuevas
+son ventanas de trabajo y aceptación, no estimaciones de esfuerzo individual.
+
+Se reemplaza la dependencia de módulos completamente terminados por
+entregables mínimos acordados: un catálogo puede avanzar con un contrato de
+perfil estable, mientras la vista previa continúa en integración. La búsqueda
+general puede avanzar sin zonas; el filtro por zona y la cercanía siguen
+condicionados a ubicación pública. Así se explica el trabajo paralelo sin
+afirmar que desaparecieron las dependencias técnicas.
+
+\begingroup\scriptsize
+\begin{longtable}{@{}L{0.9cm}L{2.4cm}L{1.8cm}L{2.0cm}L{0.7cm}L{3.3cm}L{4.5cm}@{}}
+\rowcolor{dorado}\textbf{Tarea}&\textbf{Alcance}&\textbf{Original}&
+\textbf{Ajustado}&\textbf{Días}&\textbf{Coordinación}&\textbf{Estado al corte / condición}\\\midrule\endfirsthead
+\rowcolor{suave}\textbf{Tarea}&\textbf{Alcance}&\textbf{Original}&
+\textbf{Ajustado}&\textbf{Días}&\textbf{Coordinación}&\textbf{Estado al corte / condición}\\\midrule\endhead
+\bottomrule\endfoot
+T1 & Arquitectura y BD & 28 sep.--2 oct. & 6--20 oct. & 11 &
+Leinad, Denzel & Cierre propuesto el 20 oct.; contratos mínimos habilitan integración. \\
+T2 & Cuentas y acceso público & 5--12 oct. & 19 oct.--17 nov. & 22 &
+Mario, Fernanda; Marco y Paulina & Cuentas concluidas en S4; HU-03 corregida pendiente, prevista 16--17 nov. \\
+T3 & Perfil del emprendimiento & 13--22 oct. & 20 oct.--12 nov. & 18 &
+Ángel, Orlando; Mario, Paulina y Marco & Terminada al cerrar vista previa en S6. Integra contactos y horarios. \\
+T4 & Catálogo y productos & 23--30 oct. & 23--30 oct. & 6 &
+Marco, Paulina; Fernanda, Orlando y Mario & Terminada en S4. Incluye HU-02, 07, 08, 09 y 11; se retira HU-03. \\
+T5 & Exploración, búsqueda y filtros & 2--16 nov. & 29 oct.--20 nov. & 17 &
+Leinad, Denzel; Mario, Ángel, Paulina y Marco & En proceso por HU-30; los filtros de horario y estado cierran en S6. \\
+T6 & Interacción del consumidor & 17--20 nov. & 2--5 nov. & 4 &
+Marco, Paulina; Leinad & Terminada en S5: reporte, contacto y favoritos. \\
+T7 & Administración & 13--22 oct. & 21 oct.--12 nov. & 17 &
+Fernanda, Ángel; Denzel y Paulina & Terminada en S6 con reportes y mantenimiento. \\
+T8 & Ubicación & 23--30 oct. & 22 oct.--20 nov. & 22 &
+Orlando, Mario; Ángel & HU-12 terminada; HU-10 y HU-23 pendientes. Requiere integrar publicación antes de búsqueda. \\
+T9 & Pruebas y entrega & 23--27 nov. & 9--27 nov. & 15 &
+Denzel, Fernanda; todo el equipo & Revisión incremental 9--20 nov.; aceptación final y entrega 23--27 nov. \\
+\end{longtable}\endgroup
+
+T2 amplía explícitamente su alcance por el cambio de \hu{03}. Los contratos de
+cuentas necesarios para T3 y T7 se habilitan en octubre; el cierre de acceso
+público no bloquea el desarrollo de esos módulos. Las coordinaciones por
+tarea se conservan del primer avance, con apoyo de los responsables
+individuales que aparecen en la matriz.
+
+Las duraciones anteriores se cuentan como lunes a viernes dentro de cada
+ventana; no se suman para calcular la duración del proyecto porque varias
+tareas se superponen. La línea base fechada se conserva como referencia;
+no se mezclan sus días con las estimaciones originales de 10, 15 o 7 días
+que no coincidían con el Gantt.
+
+\subsubsection{Vista semanal del cronograma actualizado}
+El sombreado azul indica ventana de trabajo o revisión. La columna inicial
+resume las dos primeras semanas registradas. La fecha final permanece el
+27 de noviembre.
+
+\begin{center}
+\begin{tikzpicture}[x=1.65cm,y=0.68cm,font=\scriptsize]
+\fill[suave] (-2.8,0.45) rectangle (7.5,-9.5);
+\foreach \x/\label in {0/S1--S2,1/S3,2/S4,3/S5,4/S6,5/S7,6/S8}{
+ \node[font=\scriptsize\bfseries] at (\x,0) {\label};
+}
+\foreach \y/\label in {1/T1: arquitectura,2/T2: cuentas y acceso,3/T3: perfil,4/T4: catálogo,5/T5: búsqueda,6/T6: interacción,7/T7: administración,8/T8: ubicación,9/T9: pruebas y entrega}{
+ \node[anchor=east] at (-0.65,-\y) {\label};
+}
+\foreach \row/\start/\finish in {1/0/1,2/1/5,3/1/4,4/1/2,5/2/5,6/3/3,7/1/4,8/1/5,9/4/6}{
+ \fill[marino] (\start-0.4,-\row-0.22) rectangle (\finish+0.4,-\row+0.22);
+}
+\end{tikzpicture}
+\end{center}
+{\small S3: 19--23 oct.; S4: 26--30 oct.; S5: 2--6 nov.; S6: 9--13 nov.;
+S7: 16--20 nov.; S8: 23--27 nov. El gráfico representa ventanas semanales;
+las fechas exactas se especifican en la tabla.}
+
+\subsubsection{Dependencias que condicionan el cierre}
+La cadena funcional que requiere mayor atención es:
+\[
+\hu{10}\ \longrightarrow\ \hu{23}\ \longrightarrow\
+\text{cercanía de \hu{30}}\ \longrightarrow\ \text{aceptación final}.
+\]
+La \hu{03} corregida se cierra en paralelo mediante la revisión de acceso
+público. Ocultar la ubicación (\hu{12}) ya está terminada: protege los datos
+privados y no equivale a haber terminado la captura, publicación o búsqueda
+por zona.
+
+No se reutilizan las holguras de 21 o 30 días del plan anterior. Al modificar
+las dependencias, el alcance de T2 y las ventanas de trabajo, esas holguras y
+las rutas críticas de la línea base dejan de describir el plan actualizado.
+La cadena anterior identifica una dependencia de cierre; no es un cálculo
+CPM con duraciones optimistas o un nuevo valor de holgura.
+
+\subsection{Plan de cierre de historias abiertas}
+\begingroup\small
+\begin{longtable}{@{}L{1.5cm}L{1.6cm}L{2.2cm}L{4.2cm}L{6.5cm}@{}}
+\rowcolor{dorado}\textbf{Historia}&\textbf{Resp.}&\textbf{Ventana}&
+\textbf{Trabajo restante}&\textbf{Condición para terminar}\\\midrule\endfirsthead
+\rowcolor{suave}\textbf{Historia}&\textbf{Resp.}&\textbf{Ventana}&
+\textbf{Trabajo restante}&\textbf{Condición para terminar}\\\midrule\endhead
+\bottomrule\endfoot
+\hu{03}&Fernanda&16--17 nov.&
+Completar aceptación de acceso público sin cuenta.&
+Recorrido de inicio, directorio y perfil sin sesión; rutas de gestión
+protegidas. Los casos por zona se revisan tras HU-23.\\
+\hu{10}&Orlando&16--18 nov.&
+Integrar captura y publicación de ubicación aproximada.&
+Guardar zona y referencia, mostrar únicamente datos autorizados y conservar
+la privacidad al desactivar visibilidad.\\
+\hu{23}&Ángel&19--20 nov.&
+Integrar búsqueda por zona con datos publicados.&
+Resultados de la zona seleccionada; ausencia de negocios con ubicación
+privada. Depende de la integración de HU-10.\\
+\hu{30}&Leinad&19--20 nov.&
+Completar cercanía e integrar todas las opciones de orden.&
+Orden alfabético, por estado y por cercanía coherentes; negocios sin
+ubicación pública sin exposición de datos. El cierre depende de HU-10 y HU-23.\\
+\end{longtable}\endgroup
+
+La implementación de cercanía puede avanzar con el contrato de zonas desde
+el 19 de noviembre; su aceptación final se realiza después de validar
+\hu{23}, el 20. Las cuatro ventanas son metas, no cierres consumados. Si no se
+completa un criterio, la historia conserva su estado abierto y se ajusta el
+plan de aceptación sin cambiar retrospectivamente las bitácoras.
+
+\subsection{Riesgos y controles de seguimiento}
+\begin{itemize}
+\item \textbf{Ubicación y cercanía:} si HU-10 se retrasa, afecta HU-23 y el
+cierre de HU-30. Orlando, Ángel y Leinad revisan diariamente datos y bloqueos.
+\item \textbf{Cambio de alcance de HU-03:} evitar confundir acceso público con
+autenticación de clientes. Fernanda registra criterios, casos sin sesión y
+la conciliación de la documentación técnica.
+\item \textbf{Integración paralela:} coordinar contratos y revisar flujos
+completos para detectar incompatibilidades antes de las pruebas finales.
+\item \textbf{Diferencias entre borrador y ejecución:} confirmar cada entrada,
+fecha y cierre con el responsable; asociar evidencia antes de aprobar.
+\end{itemize}
+
+\subsection{Aceptación final y entrega}
+Del 23 al 27 de noviembre se reserva la aceptación del conjunto:
+\begin{itemize}
+\item Revisar los recorridos de cliente sin registro, emprendedor y
+administrador, incluyendo rutas protegidas y estados de cuenta.
+\item Verificar privacidad de ubicación y credenciales, validaciones,
+mensajes claros y consistencia de horarios.
+\item Revisar uso móvil, navegación a contacto y correspondencia entre
+perfil público y vista previa.
+\item Ejecutar las verificaciones técnicas del proyecto y registrar
+resultados e incidencias, sin anticipar que pasarán.
+\item Conciliar HU-03 y la numeración de HU-20 en los documentos de cierre,
+preparar evidencia y consolidar la entrega del 27 de noviembre.
+\end{itemize}
+
+El objetivo de la recuperación es llegar al cierre de las cuarenta historias
+antes de la aceptación final. Este avance conserva el corte de 36 terminadas
+y cuatro abiertas; no presenta el objetivo futuro como resultado ya obtenido.
+
+\subsection{Fuentes de elaboración y revisión pendiente}
+Se consultaron los siguientes materiales proporcionados por el equipo:
+\begin{enumerate}[nosep,leftmargin=*]
+\item \textit{Copia de AvanceDeProyecto (Parte 01)}, fechado el 25 de
+septiembre de 2026: historias, prioridades, complejidad y responsables.
+\item \textit{Bitácora semana 1}: entradas del 6 al 9 de octubre; portada
+fechada el 22 de octubre.
+\item \textit{Bitácora semana 2}: entradas del 12 al 16 de octubre; portada
+fechada el 22 de octubre.
+\item Descripción del cronograma original: calendario del 28 de septiembre
+al 27 de noviembre y advertencia sobre diferencias con las duraciones
+estimadas.
+\item Confirmaciones del equipo para este documento: 36 terminadas,
+HU-03, HU-10 y HU-23 pendientes, HU-30 en proceso; nuevo alcance de HU-03
+como consulta sin registro y semana 6 completa como borrador.
+\end{enumerate}
+
+Se consultaron también la especificación técnica y el plan de construcción
+del repositorio como referencia de nombres y dependencias. El reporte de
+avance no sustituye la verificación de aceptación de cada funcionalidad.
+
+Antes de convertir este documento en entrega definitiva, cada integrante
+debe confirmar las actividades atribuidas, la semana de cierre y la evidencia
+correspondiente. La portada y las fechas representan el corte propuesto del
+13 de noviembre, no una aprobación ya firmada.

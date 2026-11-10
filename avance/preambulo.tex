@@ -1,0 +1,84 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{iftex}
+\ifPDFTeX\usepackage[utf8]{inputenc}\fi
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[margin=2cm,headheight=15pt]{geometry}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath}
+\usepackage[table]{xcolor}
+\usepackage{array,booktabs,longtable,tabularx}
+\usepackage{enumitem,fancyhdr,hyperref}
+\usepackage{tikz}
+\definecolor{marino}{HTML}{002D62}
+\definecolor{dorado}{HTML}{F2A900}
+\definecolor{suave}{HTML}{EDF3F8}
+\hypersetup{colorlinks=true,linkcolor=marino,urlcolor=marino}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small EmprendeBúho}
+\fancyhead[R]{\small Ingeniería de Software II}
+\fancyfoot[C]{\thepage}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{2em}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.17}
+\setlist[itemize]{nosep,leftmargin=*}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\hu}[1]{\mbox{HU-#1}}
+\newcommand{\terminada}{\textbf{Terminada}}
+\newcommand{\pendiente}{\textbf{Pendiente}}
+\newcommand{\enproceso}{\textbf{En proceso}}
+\newcommand{\notaBorrador}{\begingroup\small
+\textbf{Nota de elaboración.} Reconstrucción propuesta a partir de las bitácoras
+1 y 2, el primer avance, el cronograma original y el estado global comunicado
+por el equipo. La distribución diaria de actividades y cierres requiere
+validación de sus responsables. La semana 6 se presenta completa para revisión
+al 13 de noviembre; las entradas posteriores al 9 de noviembre son previstas.
+Los estados documentales no constituyen una auditoría del código ni un acta de
+pruebas.\par\endgroup}
+\newcommand{\portada}[2]{%
+\hypersetup{pageanchor=false}\begin{titlepage}\centering
+{\Large\bfseries Universidad de Sonora\par}
+\vspace{1.5cm}
+{\huge\bfseries\color{marino} EmprendeBúho\par}
+\vspace{0.8cm}
+{\LARGE\bfseries #1\par}
+\vspace{0.5cm}
+{\large Ingeniería de Software II\par}
+\vspace{0.5cm}
+{\large Equipo \guillemotleft Descompuestos por Cholesky\guillemotright\par}
+\vspace{0.6cm}
+\textbf{Profesor:}\par Adrian Vazquez Osorio\par
+\vspace{0.5cm}
+\textbf{Integrantes:}\par
+Paulina Bojorquez Trujillo\par
+Daniel Leinad Domínguez Calvario\par
+María Fernanda Hernández García\par
+Marco Antonio Tadeo Munro Flores\par
+Mario Alberto Ocejo Quijada\par
+Angel David Ortega Felix\par
+Orlando Pacheco Velasquez\par
+Denzel Omar Rivera Urías\par
+\vfill
+#2\par
+Hermosillo, Sonora, 13 de noviembre de 2026\par
+\vspace{0.3cm}
+{\small Borrador documental para validación del equipo\par}
+\end{titlepage}\hypersetup{pageanchor=true}}
+\newcommand{\inicioDia}[1]{%
+\clearpage\subsection*{Fecha: #1 de 2026}
+{\small En \guillemotleft ayer\guillemotright{} se registra la jornada hábil anterior; los lunes se retoma
+el viernes, sin atribuir trabajo al fin de semana.}\par
+\begingroup\footnotesize
+\begin{longtable}{@{}L{2.05cm}L{4.55cm}L{5.05cm}L{4.2cm}@{}}
+\rowcolor{dorado}\textcolor{marino}{\textbf{Integrante}}&
+\textcolor{marino}{\textbf{¿Qué hiciste ayer?}}&
+\textcolor{marino}{\textbf{¿Qué harás hoy?}}&
+\textcolor{marino}{\textbf{¿Qué necesitas?}}\\\midrule\endfirsthead
+\rowcolor{suave}\textbf{Integrante}&\textbf{¿Qué hiciste ayer?}&
+\textbf{¿Qué harás hoy?}&\textbf{¿Qué necesitas?}\\\midrule\endhead
+\bottomrule\endfoot}
+\newcommand{\finDia}{\end{longtable}\endgroup}
